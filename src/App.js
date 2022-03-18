@@ -4,12 +4,33 @@ import data from "./data.json";
 import React, { useEffect, useState } from "react";
 import Products from "./componets/Products";
 import Filter from "./componets/Filter";
+import Cart from "./componets/Cart";
 
 function App() {
   const [products, setProducts] = useState(data.products);
   const [size, setSize] = useState("");
   const [sort, setSort] = useState("");
-  const [fitlerData, setFilterData] = useState();
+  const [cartItems, setCartItems] = useState([]);
+
+  const removeCartItem = (item) => {
+    const cart = cartItems.filter((cartItem) => cartItem._id !== item._id);
+    setCartItems(cart);
+  };
+
+  const addToCart = (product) => {
+    let cartItems1 = cartItems.slice();
+    let alreadyInCart = false;
+    cartItems?.forEach((item) => {
+      if (item._id === product._id) {
+        item.count++;
+        alreadyInCart = true;
+      }
+    });
+    if (!alreadyInCart) {
+      cartItems1.push({ ...product, count: 1 });
+    }
+    setCartItems(cartItems1);
+  };
 
   const filterProducts = (event) => {
     let filterData;
@@ -60,9 +81,11 @@ function App() {
               filterProducts={filterProducts}
               sortProducts={sortProducts}
             />
-            <Products products={products} />
+            <Products products={products} addToCart={addToCart} />
           </div>
-          <div className="sidebar">Card items</div>
+          <div className="sidebar">
+            <Cart cartItems={cartItems} removeCartItem={removeCartItem} />
+          </div>
         </div>
       </main>
       <footer>All right reservered</footer>
