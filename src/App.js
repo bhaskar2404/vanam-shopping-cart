@@ -10,11 +10,19 @@ function App() {
   const [products, setProducts] = useState(data.products);
   const [size, setSize] = useState("");
   const [sort, setSort] = useState("");
-  const [cartItems, setCartItems] = useState([]);
-
+  const [cartItems, setCartItems] = useState(
+    localStorage.getItem("cartItems")
+      ? JSON.parse(localStorage.getItem("cartItems"))
+      : []
+  );
+  const createOrder = (order) => {
+    alert(JSON.stringify(order));
+  };
   const removeCartItem = (item) => {
     const cart = cartItems.filter((cartItem) => cartItem._id !== item._id);
     setCartItems(cart);
+
+    localStorage.setItem("cartItems", JSON.stringify(cart));
   };
 
   const addToCart = (product) => {
@@ -30,6 +38,7 @@ function App() {
       cartItems1.push({ ...product, count: 1 });
     }
     setCartItems(cartItems1);
+    localStorage.setItem("cartItems", JSON.stringify(cartItems1));
   };
 
   const filterProducts = (event) => {
@@ -84,7 +93,11 @@ function App() {
             <Products products={products} addToCart={addToCart} />
           </div>
           <div className="sidebar">
-            <Cart cartItems={cartItems} removeCartItem={removeCartItem} />
+            <Cart
+              cartItems={cartItems}
+              removeCartItem={removeCartItem}
+              createOrder={createOrder}
+            />
           </div>
         </div>
       </main>
