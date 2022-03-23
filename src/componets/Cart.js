@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import formatCurrency from "../util";
+import Fade from "react-reveal/Fade";
 
 const Cart = (props) => {
   const [showCheckOut, setShowCheckOut] = useState(false);
@@ -38,27 +39,29 @@ const Cart = (props) => {
       </div>
 
       <div className="cart">
-        <ul className="cart-item">
-          {cartItems.map((item) => (
-            <li key={item._id}>
-              <div>
-                <img src={item.image} alt={item.title} />
-              </div>
-              <div>
-                <div>{item.title}</div>
-                <div className="right">
-                  {formatCurrency(item.price)} x {item.count}{" "}
-                  <button
-                    className="button primary"
-                    onClick={() => removeCartItem(item)}
-                  >
-                    Remote Item
-                  </button>
+        <Fade left cascade>
+          <ul className="cart-item">
+            {cartItems.map((item) => (
+              <li key={item._id}>
+                <div>
+                  <img src={item.image} alt={item.title} />
                 </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+                <div>
+                  <div>{item.title}</div>
+                  <div className="right">
+                    {formatCurrency(item.price)} x {item.count}{" "}
+                    <button
+                      className="button primary"
+                      onClick={() => removeCartItem(item)}
+                    >
+                      Remote Item
+                    </button>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Fade>
       </div>
       {cartItems.length !== 0 && (
         <div>
@@ -79,44 +82,46 @@ const Cart = (props) => {
             </div>
           </div>
           {showCheckOut && (
-            <div className="cart">
-              <form onSubmit={createOrder}>
-                <ul className="form-container">
-                  <li>
-                    <label>Email</label>
-                    <input
-                      type="email"
-                      name="email"
-                      required
-                      onChange={(e) => handleInput(e)}
-                    />
-                  </li>
-                  <li>
-                    <label>Name</label>
-                    <input
-                      type="text"
-                      name="name"
-                      required
-                      onChange={(e) => handleInput(e)}
-                    />
-                  </li>
-                  <li>
-                    <label>Address</label>
-                    <input
-                      type="text"
-                      name="address"
-                      required
-                      onChange={(e) => handleInput(e)}
-                    />
-                  </li>
-                  <li>
-                    <button className="button primary" type="submit">
-                      Checkout
-                    </button>
-                  </li>
-                </ul>
-              </form>
-            </div>
+            <Fade right cascade>
+              <div className="cart">
+                <form onSubmit={createOrder}>
+                  <ul className="form-container">
+                    <li>
+                      <label>Email</label>
+                      <input
+                        type="email"
+                        name="email"
+                        required
+                        onChange={(e) => handleInput(e)}
+                      />
+                    </li>
+                    <li>
+                      <label>Name</label>
+                      <input
+                        type="text"
+                        name="name"
+                        required
+                        onChange={(e) => handleInput(e)}
+                      />
+                    </li>
+                    <li>
+                      <label>Address</label>
+                      <input
+                        type="text"
+                        name="address"
+                        required
+                        onChange={(e) => handleInput(e)}
+                      />
+                    </li>
+                    <li>
+                      <button className="button primary" type="submit">
+                        Checkout
+                      </button>
+                    </li>
+                  </ul>
+                </form>
+              </div>
+            </Fade>
           )}
         </div>
       )}
