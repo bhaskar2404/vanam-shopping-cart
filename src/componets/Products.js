@@ -11,17 +11,19 @@ const Products = ({ products, addToCart, ...props }) => {
 
   useEffect(() => {
     props.fetchProducts();
-  });
+  }, []);
   const openModal = (product) => {
     setProduct(product);
   };
+
+  console.log("products ***", products);
   const closeModal = () => {
     setProduct(null);
   };
   return (
     <div>
       <Fade button cascade>
-        {!props.products ? (
+        {!products ? (
           <div>Loading...</div>
         ) : (
           <ul className="products">
@@ -94,9 +96,13 @@ const Products = ({ products, addToCart, ...props }) => {
   );
 };
 
+const mapStateToProps = (state) => {
+  return state.items;
+};
+
 export default connect(
-  (state) => {
-    products: state.products.items;
-  },
+  (state) => ({
+    products: state.products.items,
+  }),
   { fetchProducts }
 )(Products);
