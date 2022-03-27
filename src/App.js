@@ -5,6 +5,8 @@ import React, { useEffect, useState } from "react";
 import Products from "./componets/Products";
 import Filter from "./componets/Filter";
 import Cart from "./componets/Cart";
+import store from "./store";
+import { Provider } from "react-redux";
 
 function App() {
   const [products, setProducts] = useState(data.products);
@@ -76,33 +78,35 @@ function App() {
   };
 
   return (
-    <div className="grid-container">
-      <header>
-        <a href="/">Vanam Shopping Cart</a>
-      </header>
-      <main>
-        <div className="content">
-          <div className="main">
-            <Filter
-              count={products.length}
-              size={size}
-              sort={sort}
-              filterProducts={filterProducts}
-              sortProducts={sortProducts}
-            />
-            <Products products={products} addToCart={addToCart} />
+    <Provider store={store}>
+      <div className="grid-container">
+        <header>
+          <a href="/">Vanam Shopping Cart</a>
+        </header>
+        <main>
+          <div className="content">
+            <div className="main">
+              <Filter
+                count={products.length}
+                size={size}
+                sort={sort}
+                filterProducts={filterProducts}
+                sortProducts={sortProducts}
+              />
+              <Products products={products} addToCart={addToCart} />
+            </div>
+            <div className="sidebar">
+              <Cart
+                cartItems={cartItems}
+                removeCartItem={removeCartItem}
+                createOrder={createOrder}
+              />
+            </div>
           </div>
-          <div className="sidebar">
-            <Cart
-              cartItems={cartItems}
-              removeCartItem={removeCartItem}
-              createOrder={createOrder}
-            />
-          </div>
-        </div>
-      </main>
-      <footer>All right reservered</footer>
-    </div>
+        </main>
+        <footer>All right reservered</footer>
+      </div>
+    </Provider>
   );
 }
 
