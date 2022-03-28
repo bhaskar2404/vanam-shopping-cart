@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import formatCurrency from "../util";
 import Fade from "react-reveal/Fade";
-import { fetchProducts } from "../action/prodcutActions";
+import { fetchProducts } from "../action/productActions";
 import { connect } from "react-redux";
 import Modal from "react-modal";
 
@@ -102,7 +102,7 @@ const mapStateToProps = (state) => {
 
 export default connect(
   (state) => ({
-    products: state.products.items,
+    products: state.products.filteredItems,
   }),
   { fetchProducts }
 )(Products);
