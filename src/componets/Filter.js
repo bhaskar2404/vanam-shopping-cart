@@ -1,12 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { connect } from "react-redux";
+import { filterProducts, sortProducts1 } from "../action/productActions";
+const Filter = ({
+  count,
+  size,
+  sort,
 
-const Filter = ({ count, size, sort, filterProducts, sortProducts }) => {
-  return (
+  sortProducts,
+  ...props
+}) => {
+  // useEffect(() => {
+  //   props.filterProducts();
+  // });
+
+  console.log("Props printing", props);
+  return !props.filteredProducts ? (
+    <div>Loading...</div>
+  ) : (
     <div className="filter">
-      <div className="filter-result">{count} Products</div>
+      <div className="filter-result">
+        {props.filteredProducts.length} Products
+      </div>
       <div className="fitler-srt">
         Order
-        <select value={sort} onChange={sortProducts}>
+        <select
+          value={props.sort}
+          onChange={(e) =>
+            props.sortProducts1(props.filteredProducts, e.target.value)
+          }
+        >
           <option value="none">Latest</option>
           <option value="low">Lowest</option>
           <option value="high">highest</option>
@@ -15,7 +37,10 @@ const Filter = ({ count, size, sort, filterProducts, sortProducts }) => {
       <div className="filter-size">
         {" "}
         Filter
-        <select value={size} onChange={filterProducts}>
+        <select
+          value={props.size}
+          onChange={(e) => props.filterProducts(props.products, e.target.value)}
+        >
           <option value="">All</option>
           <option value="XS">XS</option>
           <option value="S">S</option>
@@ -29,4 +54,12 @@ const Filter = ({ count, size, sort, filterProducts, sortProducts }) => {
   );
 };
 
-export default Filter;
+export default connect(
+  (state) => ({
+    size: state.products.size,
+    sort: state.products.sort,
+    products: state.products.items,
+    filteredProducts: state.products.filteredItems,
+  }),
+  { filterProducts, sortProducts1 }
+)(Filter);
