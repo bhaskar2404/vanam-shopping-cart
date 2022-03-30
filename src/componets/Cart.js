@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import formatCurrency from "../util";
 import Fade from "react-reveal/Fade";
+import { addToCart, removeCartItem } from "../action/cartActions";
+import { connect } from "react-redux";
 
 const Cart = (props) => {
   const [showCheckOut, setShowCheckOut] = useState(false);
@@ -9,7 +11,6 @@ const Cart = (props) => {
     email: "",
     address: "",
   });
-  const { cartItems, removeCartItem } = props;
 
   const handleInput = (e) => {
     setChkDetails({ ...chkDetails, [e.target.name]: e.target.value });
@@ -22,18 +23,18 @@ const Cart = (props) => {
       name: chkDetails.name,
       email: chkDetails.email,
       address: chkDetails.address,
-      cartitems: cartItems,
+      cartitems: props.cartItems,
     };
     props.createOrder(order);
   };
   return (
     <div>
       <div>
-        {cartItems.length === 0 ? (
+        {props.cartItems?.length === 0 ? (
           <div className="cart cart-header">Cart is Empty</div>
         ) : (
           <div className="cart cart-header">
-            You have {cartItems.length} in the Cart
+            You have {props.cartItems?.length} in the Cart
           </div>
         )}
       </div>
@@ -41,7 +42,7 @@ const Cart = (props) => {
       <div className="cart">
         <Fade left cascade>
           <ul className="cart-item">
-            {cartItems.map((item) => (
+            {props.cartItems.map((item) => (
               <li key={item._id}>
                 <div>
                   <img src={item.image} alt={item.title} />
@@ -52,7 +53,7 @@ const Cart = (props) => {
                     {formatCurrency(item.price)} x {item.count}{" "}
                     <button
                       className="button primary"
-                      onClick={() => removeCartItem(item)}
+                      onClick={() => props.removeCartItem(item)}
                     >
                       Remote Item
                     </button>
@@ -63,14 +64,14 @@ const Cart = (props) => {
           </ul>
         </Fade>
       </div>
-      {cartItems.length !== 0 && (
+      {props.cartItems.length !== 0 && (
         <div>
           <div className="cart">
             <div className="total">
               <div>
                 Total : {""}
                 {formatCurrency(
-                  cartItems.reduce((a, c) => a + c.price * c.count, 0)
+                  props.cartItems.reduce((a, c) => a + c.price * c.count, 0)
                 )}
               </div>
               <button
@@ -129,4 +130,6 @@ const Cart = (props) => {
   );
 };
 
-export default Cart;
+export default connect((state) => ({ cartItems: state.cart.cartItems }), {
+  removeCartItem,
+})(Cart);
