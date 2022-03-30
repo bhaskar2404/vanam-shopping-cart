@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 
 import { Zoom } from "react-reveal";
-const Products = ({ products, ...props }) => {
+const Products = (props) => {
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
@@ -17,18 +17,18 @@ const Products = ({ products, ...props }) => {
     setProduct(product);
   };
 
-  console.log("products ***", products);
+  console.log("products ***", props.products);
   const closeModal = () => {
     setProduct(null);
   };
   return (
     <div>
       <Fade button cascade>
-        {!products ? (
+        {!props.products ? (
           <div>Loading...</div>
         ) : (
           <ul className="products">
-            {products.map((product) => (
+            {props.products.map((product) => (
               <li key={product._id}>
                 <div className="product">
                   <a
@@ -43,7 +43,7 @@ const Products = ({ products, ...props }) => {
                   </div>
                   <button
                     className="button primary"
-                    onClick={() => addToCart(product)}
+                    onClick={() => props.addToCart(product)}
                   >
                     Add To Cart
                   </button>
