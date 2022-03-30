@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import formatCurrency from "../util";
 import Fade from "react-reveal/Fade";
 import { fetchProducts } from "../action/productActions";
+import { addToCart } from "../action/cartActions";
 import { connect } from "react-redux";
 import Modal from "react-modal";
 
 import { Zoom } from "react-reveal";
-const Products = ({ products, addToCart, ...props }) => {
+const Products = ({ products, ...props }) => {
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
@@ -79,7 +80,7 @@ const Products = ({ products, addToCart, ...props }) => {
                   <button
                     className="button primary"
                     onClick={() => {
-                      addToCart(product);
+                      props.addToCart(product);
                       closeModal();
                     }}
                   >
@@ -104,5 +105,5 @@ export default connect(
   (state) => ({
     products: state.products.filteredItems,
   }),
-  { fetchProducts }
+  { fetchProducts, addToCart }
 )(Products);
