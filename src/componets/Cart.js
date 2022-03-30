@@ -3,6 +3,9 @@ import formatCurrency from "../util";
 import Fade from "react-reveal/Fade";
 import { connect } from "react-redux";
 import { removeFromCart } from "../action/cartActions";
+import { createOrder, clearOrder } from "../action/createOrder";
+import Modal from "react-modal/lib/components/Modal";
+import { Zoom } from "react-reveal";
 
 const Cart = (props) => {
   const [showCheckOut, setShowCheckOut] = useState(false);
@@ -11,9 +14,12 @@ const Cart = (props) => {
     email: "",
     address: "",
   });
-
+  console.log("props from cart" + props.order);
   const handleInput = (e) => {
     setChkDetails({ ...chkDetails, [e.target.name]: e.target.value });
+  };
+  const closeModal = () => {
+    props.clearOrder();
   };
   const createOrder = (e) => {
     //   e.priventDefault();
@@ -24,9 +30,12 @@ const Cart = (props) => {
       email: chkDetails.email,
       address: chkDetails.address,
       cartitems: props.cartItems,
+      total: props.cartItems.reduce((a, c) => a + c.price * c.count, 0),
     };
+    //console.table(order);
     props.createOrder(order);
   };
+
   return (
     <div>
       <div>
@@ -38,7 +47,51 @@ const Cart = (props) => {
           </div>
         )}
       </div>
-
+      {props.order && (
+        <Modal isOpen={true} onRequestClose={closeModal} ariaHideApp={false}>
+          <Zoom>
+            <button className="close-modal" onClick={closeModal}>
+              X
+            </button>
+            <div className="order-details">
+              <h3 className="success-message">Your order has been placed.</h3>
+              <h2>Order {props.order._id}</h2>
+              <ul>
+                <li>
+                  <div>Name:</div>
+                  <div>{props.order.name}</div>
+                </li>
+                <li>
+                  <div>Email:</div>
+                  <div>{props.order.email}</div>
+                </li>
+                <li>
+                  <div>Address:</div>
+                  <div>{props.order.address}</div>
+                </li>
+                <li>
+                  <div>Date:</div>
+                  <div>{props.order.createdAt}</div>
+                </li>
+                <li>
+                  <div>Total:</div>
+                  <div>{props.order.total}</div>
+                </li>
+                <li>
+                  <div>Cart Items:</div>
+                  <div>
+                    {props.order.cartItems?.map((x) => (
+                      <div>
+                        {x.count} {" x "} {x.title}
+                      </div>
+                    ))}
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </Zoom>
+        </Modal>
+      )}
       <div className="cart">
         <Fade left cascade>
           <ul className="cart-item">
@@ -133,6 +186,7 @@ const Cart = (props) => {
 export default connect(
   (state) => ({
     cartItems: state.cart.cartItems,
+    order: state.order.order,
   }),
-  { removeFromCart }
+  { removeFromCart, createOrder, clearOrder }
 )(Cart);
