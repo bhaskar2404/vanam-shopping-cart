@@ -6,6 +6,7 @@ import Filter from "./componets/Filter";
 import Cart from "./componets/Cart";
 import store from "./store";
 import { Provider } from "react-redux";
+import MyErrorBoundary from "./error/MyErrorBoundary";
 
 function App() {
   const [products, setProducts] = useState();
@@ -50,15 +51,17 @@ function App() {
         <main>
           <div className="content">
             <div className="main">
-              <Filter />
-              <Products addToCart={addToCart} />
+              <MyErrorBoundary>
+                <Filter />
+              </MyErrorBoundary>
+              <MyErrorBoundary>
+                <Products />
+              </MyErrorBoundary>
             </div>
             <div className="sidebar">
-              <Cart
-                cartItems={cartItems}
-                removeCartItem={removeCartItem}
-                createOrder={createOrder}
-              />
+              <MyErrorBoundary>
+                <Cart createOrder={createOrder} />
+              </MyErrorBoundary>
             </div>
           </div>
         </main>
